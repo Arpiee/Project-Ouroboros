@@ -27,6 +27,8 @@ def main():
     parser.add_argument("--search", type=str, help="Search keyword in all runs")
     parser.add_argument("--export", type=str, help="Export a run to a separate JSON file") 
     parser.add_argument("--stats", action="store_true", help="Show statistics about all runs")
+    parser.add_argument("--investments", action="store_true", help="Show all investment runs")
+
  
 
     args = parser.parse_args()
@@ -119,6 +121,14 @@ def main():
         print(f"{idea}: {count} times")
 
     return
+    if args.investments:
+        print("\n=== ALL INVESTMENT RUNS ===")
+    for i, run in enumerate(runs):
+        budget = run.get("input_budget", "unknown")
+        idea = run["selection"]["selected_idea"]["title"]
+        print(f"Run {i}: Budget ${budget} → Selected Idea: {idea}")
+    return
+
 
 
     print("No option selected. Use --list, --last, --first, --index, --id, --summary, --search, or --export.")

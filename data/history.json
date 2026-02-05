@@ -335,6 +335,1985 @@
             },
             "run_id": "db2cd2ce-0f24-452f-b871-8671470df1c6",
             "timestamp": "2026-01-30 18:13:11"
+        },
+        {
+            "trend_scan": {
+                "input_budget": 100,
+                "input_goal": "general",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "AI automations",
+                    "digital services",
+                    "content products",
+                    "template businesses",
+                    "resume/portfolio tools",
+                    "freelancer productivity tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "target_user": "Students",
+                        "budget_required": 40,
+                        "time_horizon_days": 14
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "target_user": "Freelancers",
+                        "budget_required": 20,
+                        "time_horizon_days": 10
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "target_user": "Etsy Sellers",
+                        "budget_required": 60,
+                        "time_horizon_days": 14
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "target_user": "Students",
+                        "budget_required": 30,
+                        "time_horizon_days": 7
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "target_user": "Students",
+                    "budget_required": 40,
+                    "time_horizon_days": 14
+                },
+                "reasoning": {
+                    "summary": "Selected first idea as placeholder.",
+                    "financial_reason": "Good ROI.",
+                    "ethical_reason": "No ethical issues.",
+                    "impact_reason": "Strong impact.",
+                    "rejected_ideas": [
+                        {
+                            "idea_id": "idea_2",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_3",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_4",
+                            "reason": "Not selected."
+                        }
+                    ]
+                }
+            },
+            "run_id": "a8f75095-84b7-4553-8834-5c881683695c",
+            "timestamp": "2026-02-04 16:17:27"
+        },
+        {
+            "trend_scan": {
+                "input_budget": 100,
+                "input_goal": "general",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "AI automations",
+                    "digital services",
+                    "content products",
+                    "template businesses",
+                    "resume/portfolio tools",
+                    "freelancer productivity tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "target_user": "Students",
+                        "budget_required": 40,
+                        "time_horizon_days": 14
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "target_user": "Freelancers",
+                        "budget_required": 20,
+                        "time_horizon_days": 10
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "target_user": "Etsy Sellers",
+                        "budget_required": 60,
+                        "time_horizon_days": 14
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "target_user": "Students",
+                        "budget_required": 30,
+                        "time_horizon_days": 7
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "target_user": "Students",
+                    "budget_required": 40,
+                    "time_horizon_days": 14
+                },
+                "reasoning": {
+                    "summary": "Selected first idea as placeholder.",
+                    "financial_reason": "Good ROI.",
+                    "ethical_reason": "No ethical issues.",
+                    "impact_reason": "Strong impact.",
+                    "rejected_ideas": [
+                        {
+                            "idea_id": "idea_2",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_3",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_4",
+                            "reason": "Not selected."
+                        }
+                    ]
+                }
+            },
+            "run_id": "cc93667d-91b4-40aa-8639-bbcc86e01c0f",
+            "timestamp": "2026-02-04 16:18:44"
+        },
+        {
+            "input_budget": 500,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 500,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "software tools",
+                    "subscription products",
+                    "AI SaaS",
+                    "automation platforms",
+                    "AI-powered marketplaces",
+                    "scalable digital products",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                },
+                "reasoning": {
+                    "summary": "Selected first idea as placeholder.",
+                    "financial_reason": "Good ROI.",
+                    "ethical_reason": "No ethical issues.",
+                    "impact_reason": "Strong impact.",
+                    "rejected_ideas": [
+                        {
+                            "idea_id": "idea_2",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_3",
+                            "reason": "Not selected."
+                        },
+                        {
+                            "idea_id": "idea_4",
+                            "reason": "Not selected."
+                        }
+                    ]
+                }
+            },
+            "run_id": "86f005dc-2455-43e9-a2fa-88a36cb51944",
+            "timestamp": "2026-02-04 16:32:00"
+        },
+        {
+            "input_budget": 500,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 500,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "software tools",
+                    "subscription products",
+                    "AI SaaS",
+                    "automation platforms",
+                    "AI-powered marketplaces",
+                    "scalable digital products",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "3a1255e7-b20b-4bf1-90a0-0633cfd77929",
+            "timestamp": "2026-02-04 16:38:34"
+        },
+        {
+            "input_budget": 40,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 40,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "micro digital products",
+                    "low-cost AI tools",
+                    "simple automations",
+                    "printable templates",
+                    "low-budget student tools",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "3733b919-d396-48d0-b6de-e8472510ab72",
+            "timestamp": "2026-02-04 16:39:31"
+        },
+        {
+            "input_budget": 40,
+            "input_goal": "general",
+            "trend_scan": {
+                "input_budget": 40,
+                "input_goal": "general",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "micro digital products",
+                    "low-cost AI tools",
+                    "simple automations",
+                    "printable templates",
+                    "low-budget student tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "1445aaec-373c-405a-a8d9-4160ec16537e",
+            "timestamp": "2026-02-04 16:40:03"
+        },
+        {
+            "input_budget": 500,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 500,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "software tools",
+                    "subscription products",
+                    "AI SaaS",
+                    "automation platforms",
+                    "AI-powered marketplaces",
+                    "scalable digital products",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "255faad0-0817-4cb1-9236-3ad0e29c2ae4",
+            "timestamp": "2026-02-04 16:42:53"
+        },
+        {
+            "input_budget": 100,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 100,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "AI automations",
+                    "digital services",
+                    "content products",
+                    "template businesses",
+                    "resume/portfolio tools",
+                    "freelancer productivity tools",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "7b3e52a2-0c36-44fc-a631-0a7f1eff1ba5",
+            "timestamp": "2026-02-04 17:09:39"
+        },
+        {
+            "input_budget": 40,
+            "input_goal": "AI tools",
+            "trend_scan": {
+                "input_budget": 40,
+                "input_goal": "AI tools",
+                "constraints": {
+                    "ethics": [
+                        "no crypto"
+                    ],
+                    "time_horizon_days": 14
+                },
+                "opportunity_themes": [
+                    "micro digital products",
+                    "low-cost AI tools",
+                    "simple automations",
+                    "printable templates",
+                    "low-budget student tools",
+                    "AI tools"
+                ]
+            },
+            "ideas": {
+                "ideas": [
+                    {
+                        "id": "idea_1",
+                        "title": "AI Resume Review Tool",
+                        "description": "A micro-service that reviews resumes.",
+                        "budget_required": 40,
+                        "time_horizon_days": 14,
+                        "target_user": "Students"
+                    },
+                    {
+                        "id": "idea_2",
+                        "title": "Notion Templates",
+                        "description": "Sell productivity templates.",
+                        "budget_required": 20,
+                        "time_horizon_days": 10,
+                        "target_user": "Freelancers"
+                    },
+                    {
+                        "id": "idea_3",
+                        "title": "Etsy Automation Scripts",
+                        "description": "Scripts to help Etsy sellers.",
+                        "budget_required": 60,
+                        "time_horizon_days": 14,
+                        "target_user": "Etsy Sellers"
+                    },
+                    {
+                        "id": "idea_4",
+                        "title": "AI Study Planner",
+                        "description": "A tool that generates study plans for students.",
+                        "budget_required": 30,
+                        "time_horizon_days": 7,
+                        "target_user": "Students"
+                    }
+                ]
+            },
+            "financial": {
+                "financial_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "risk_score": 0.4,
+                        "reward_score": 0.7,
+                        "difficulty": 0.5,
+                        "expected_roi": 0.6,
+                        "comments": "Placeholder financial evaluation."
+                    }
+                ]
+            },
+            "ethics": {
+                "ethics_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "ethical_score": 0.9,
+                        "flags": [],
+                        "comments": "No ethical issues detected."
+                    }
+                ]
+            },
+            "impact": {
+                "impact_evaluations": [
+                    {
+                        "idea_id": "idea_1",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_2",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_3",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    },
+                    {
+                        "idea_id": "idea_4",
+                        "impact_score": 0.7,
+                        "novelty_score": 0.6,
+                        "overall_recommendation": "strong"
+                    }
+                ]
+            },
+            "selection": {
+                "top_recommendations": [
+                    {
+                        "idea": {
+                            "id": "idea_1",
+                            "title": "AI Resume Review Tool",
+                            "description": "A micro-service that reviews resumes.",
+                            "budget_required": 40,
+                            "time_horizon_days": 14,
+                            "target_user": "Students"
+                        },
+                        "financial": {
+                            "idea_id": "idea_1",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_1",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_2",
+                            "title": "Notion Templates",
+                            "description": "Sell productivity templates.",
+                            "budget_required": 20,
+                            "time_horizon_days": 10,
+                            "target_user": "Freelancers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_2",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_2",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    },
+                    {
+                        "idea": {
+                            "id": "idea_3",
+                            "title": "Etsy Automation Scripts",
+                            "description": "Scripts to help Etsy sellers.",
+                            "budget_required": 60,
+                            "time_horizon_days": 14,
+                            "target_user": "Etsy Sellers"
+                        },
+                        "financial": {
+                            "idea_id": "idea_3",
+                            "risk_score": 0.4,
+                            "reward_score": 0.7,
+                            "difficulty": 0.5,
+                            "expected_roi": 0.6,
+                            "comments": "Placeholder financial evaluation."
+                        },
+                        "impact": {
+                            "idea_id": "idea_3",
+                            "impact_score": 0.7,
+                            "novelty_score": 0.6,
+                            "overall_recommendation": "strong"
+                        },
+                        "combined_score": 0.6799999999999999
+                    }
+                ],
+                "selected_idea": {
+                    "id": "idea_1",
+                    "title": "AI Resume Review Tool",
+                    "description": "A micro-service that reviews resumes.",
+                    "budget_required": 40,
+                    "time_horizon_days": 14,
+                    "target_user": "Students"
+                }
+            },
+            "run_id": "c95b57ba-637b-44bf-970e-33b464860c9d",
+            "timestamp": "2026-02-04 17:10:56"
         }
     ]
 }

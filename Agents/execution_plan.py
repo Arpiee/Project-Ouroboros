@@ -5,24 +5,28 @@ import json
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class ImpactEvaluatorAgent(BaseAgent):
+class ExecutionPlanAgent(BaseAgent):
     def __init__(self):
-        super().__init__("B2_ImpactEvaluator", "Impact Evaluator")
+        super().__init__("D1_ExecutionPlan", "Execution Plan Generator")
 
     def run(self, input_data):
-        ideas = input_data["ideas"]
+        idea = input_data["idea"]
+        days = input_data.get("time_horizon_days", 14)
 
         prompt = f"""
-        Evaluate the social and market impact of these ideas:
-        {ideas}
+        Create a detailed day-by-day execution plan for this idea:
 
-        Score each idea from 0–100.
+        Title: {idea['title']}
+        Description: {idea['description']}
+        Budget Required: {idea['budget_required']}
+
+        Create a {days}-day plan.
         Return ONLY JSON:
 
         [
           {{
-            "id": "idea_1",
-            "impact_score": 72
+            "day": 1,
+            "task": "Research competitors"
           }}
         ]
         """
@@ -30,11 +34,11 @@ class ImpactEvaluatorAgent(BaseAgent):
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3
+            temperature=0.7
         )
 
         raw = response.choices[0].message.content
-        return {"impact_scores": self._safe_parse(raw)}
+        return {"execution_plan": self._safe_parse(raw)}
 
     def _safe_parse(self, text):
         try:

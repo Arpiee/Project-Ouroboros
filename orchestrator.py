@@ -1,125 +1,89 @@
-print("Orchestrator file is running...")
-
 from Agents.trend_scanner import TrendScannerAgent
 from Agents.idea_generator import IdeaGeneratorAgent
 from Agents.financial_evaluator import FinancialEvaluatorAgent
-from Agents.ethics_evaluator import EthicsEvaluatorAgent
 from Agents.impact_evaluator import ImpactEvaluatorAgent
-from Agents.selector import IdeaSelectorAgent
-
-import json
-import os
-import time
-import uuid
-import argparse
+from Agents.ethics_evaluator import EthicsEvaluatorAgent
+from Agents.selector import SelectorAgent
+from Agents.execution_plan import ExecutionPlanAgent
 
 
-# ---------------------------
-# Parse CLI arguments
-# ---------------------------
-parser = argparse.ArgumentParser()
-parser.add_argument("--invest", type=int, help="Investment amount for venture")
-parser.add_argument("--goal", type=str, help="Optional goal or theme")
-args = parser.parse_args()
-
-investment = args.invest if args.invest else 100
-goal = args.goal if args.goal else "general"
-
-
-# ---------------------------
-# Orchestrator Class
-# ---------------------------
 class Orchestrator:
     def __init__(self):
-        self.a1 = TrendScannerAgent()
-        self.a2 = IdeaGeneratorAgent()
-        self.b1 = FinancialEvaluatorAgent()
-        self.b2 = EthicsEvaluatorAgent()
-        self.b3 = ImpactEvaluatorAgent()
-        self.c1 = IdeaSelectorAgent()
+        self.trend_scanner = TrendScannerAgent()
+        self.idea_generator = IdeaGeneratorAgent()
+        self.financial_evaluator = FinancialEvaluatorAgent()
+        self.impact_evaluator = ImpactEvaluatorAgent()
+        self.ethics_evaluator = EthicsEvaluatorAgent()
+        self.selector = SelectorAgent()
+        self.execution_plan = ExecutionPlanAgent()
 
-    def run_session(self, budget, goal):
-        constraints = {"ethics": ["no crypto"], "time_horizon_days": 14}
+    def run_session(self, budget, goal, constraints, time_horizon):
+        # A1: Trends
+        trends_out = self.trend_scanner.run({"goal": goal})
 
-        # A-Stage
-        a1_out = self.a1.run({"budget": budget, "goal": goal, "constraints": constraints})
-        a2_out = self.a2.run({"budget": budget, "constraints": constraints})
+        # A2: Ideas
+        ideas_out = self.idea_generator.run({
+            "budget": budget,
+            "goal": goal,
+            "constraints": constraints
+        })
+        ideas = ideas_out["ideas"]
 
-        # B-Stage
-        b1_out = self.b1.run({"ideas": a2_out["ideas"]})
-        b2_out = self.b2.run({"ideas": a2_out["ideas"], "constraints": constraints})
-        b3_out = self.b3.run({"ideas": a2_out["ideas"]})
+        # Build id → idea map
+        ideas_by_id = {idea["id"]: idea for idea in ideas if "id" in idea}
 
-        # C-Stage
-        c1_out = self.c1.run({
-            "ideas": a2_out["ideas"],
-            "financial_evaluations": b1_out["financial_evaluations"],
-            "ethics_evaluations": b2_out["ethics_evaluations"],
-            "impact_evaluations": b3_out["impact_evaluations"]
+        # B1: Financial
+        financial_out = self.financial_evaluator.run({"ideas": ideas})
+        # B2: Impact
+        impact_out = self.impact_evaluator.run({"ideas": ideas})
+        # B3: Ethics
+        ethics_out = self.ethics_evaluator.run({"ideas": ideas})
+
+        financial_scores = financial_out["financial_scores"]
+        impact_scores = impact_out["impact_scores"]
+        ethics_scores = ethics_out["ethics_scores"]
+
+        # Normalize scores by id
+        fin_by_id = {str(item["id"]): float(item["score"]) for item in financial_scores}
+        imp_by_id = {str(item["id"]): float(item["score"]) for item in impact_scores}
+        eth_by_id = {str(item["id"]): float(item["score"]) for item in ethics_scores}
+
+        # C1: Selector uses id-based scores
+        selector_out = self.selector.run({
+            "ideas": ideas,
+            "financial_scores": financial_scores,
+            "impact_scores": impact_scores,
+            "ethics_scores": ethics_scores
         })
 
+        top_idea = selector_out["top_recommendations"][0]["idea"]
+
+        # D1: Execution plan
+        execution_out = self.execution_plan.run({
+            "idea": top_idea,
+            "time_horizon_days": time_horizon
+        })
+
+        # Build title-keyed scores for UI convenience
+        fin_by_title = {}
+        imp_by_title = {}
+        eth_by_title = {}
+        for idea in ideas:
+            iid = str(idea.get("id", ""))
+            title = idea.get("title", iid)
+            fin_by_title[title] = fin_by_id.get(iid, 0)
+            imp_by_title[title] = imp_by_id.get(iid, 0)
+            eth_by_title[title] = eth_by_id.get(iid, 0)
+
         return {
-            "input_budget": budget,
-            "input_goal": goal,
-            "trend_scan": a1_out,
-            "ideas": a2_out,
-            "financial": b1_out,
-            "ethics": b2_out,
-            "impact": b3_out,
-            "selection": c1_out
+            "trends": trends_out["trends"],
+            "ideas": ideas,
+            "financial_scores": financial_scores,   # list of {id, score}
+            "impact_scores": impact_scores,
+            "ethics_scores": ethics_scores,
+            "financial_scores_by_title": fin_by_title,
+            "impact_scores_by_title": imp_by_title,
+            "ethics_scores_by_title": eth_by_title,
+            "top_recommendations": selector_out["top_recommendations"],
+            "execution_plan": execution_out["execution_plan"]
         }
-
-
-# ---------------------------
-# Save Run to History
-# ---------------------------
-def save_run(result):
-    path = os.path.join("data", "history.json")
-
-    with open(path, "r") as f:
-        data = json.load(f)
-
-    result["run_id"] = str(uuid.uuid4())
-    result["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
-
-    data["runs"].append(result)
-
-    with open(path, "w") as f:
-        json.dump(data, f, indent=4)
-
-
-# ---------------------------
-# Execute Orchestrator
-# ---------------------------
-if __name__ == "__main__":
-    print("Orchestrator file is running...")
-
-    orch = Orchestrator()
-    result = orch.run_session(
-        budget=investment,
-        goal=goal
-    )
-
-
-print("\n=== TOP RECOMMENDATIONS ===")
-
-top_items = result["selection"].get("top_recommendations")
-
-if not top_items:
-    selected = result["selection"]["selected_idea"]
-    print(f"\nBest Idea: {selected['title']}")
-    print(f"Budget Required: ${selected['budget_required']}")
-    print(f"Target User: {selected['target_user']}")
-    print(f"Description: {selected['description']}")
-else:
-    for idx, item in enumerate(top_items, start=1):
-        idea = item["idea"]
-        print(f"\n#{idx}: {idea['title']}")
-        print(f"   Budget Required: ${idea['budget_required']}")
-        print(f"   Target User: {idea['target_user']}")
-        print(f"   Description: {idea['description']}")
-        print(f"   Combined Score: {round(item['combined_score'], 2)}")
-
-
-
-    save_run(result)

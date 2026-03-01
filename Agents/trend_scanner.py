@@ -1,60 +1,47 @@
 from .base import BaseAgent
+from groq import Groq
+import os
+import json
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 class TrendScannerAgent(BaseAgent):
     def __init__(self):
         super().__init__("A1_TrendScanner", "Trend Scanner")
 
     def run(self, input_data):
-        """
-        Trend scanner that reacts to:
-        - Customer investment amount
-        - Customer goal (optional)
-        - Constraints (optional)
-        """
-
-        budget = input_data.get("budget", 100)
         goal = input_data.get("goal", "general")
-        constraints = input_data.get("constraints", {})
 
-        # Budget-based themes
-        if budget < 100:
-            themes = [
-                "micro digital products",
-                "low-cost AI tools",
-                "simple automations",
-                "printable templates",
-                "low-budget student tools"
-            ]
-        elif budget < 500:
-            themes = [
-                "AI automations",
-                "digital services",
-                "content products",
-                "template businesses",
-                "resume/portfolio tools",
-                "freelancer productivity tools"
-            ]
-        else:
-            themes = [
-                "software tools",
-                "subscription products",
-                "AI SaaS",
-                "automation platforms",
-                "AI-powered marketplaces",
-                "scalable digital products"
-            ]
+        prompt = f"""
+        Identify the top 10 trending business opportunities related to: {goal}.
+        Return ONLY JSON:
 
-        # Add customer goal if provided
-        if goal != "general":
-            themes.append(goal)
+        [
+          {{
+            "trend": "AI automation",
+            "description": "Businesses are adopting AI tools to automate workflows."
+          }}
+        ]
+        """
 
-        # Apply constraints (optional)
-        if constraints.get("no_ai"):
-            themes = [t for t in themes if "AI" not in t]
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5
+        )
 
-        return {
-            "input_budget": budget,
-            "input_goal": goal,
-            "constraints": constraints,
-            "opportunity_themes": themes
-        }
+        raw = response.choices[0].message.content
+        return {"trends": self._safe_parse(raw)}
+
+    def _safe_parse(self, text):
+        try:
+            return json.loads(text)
+        except:
+            start = text.find("[")
+            end = text.rfind("]") + 1
+            if start != -1 and end != -1:
+                try:
+                    return json.loads(text[start:end])
+                except:
+                    pass
+        return []

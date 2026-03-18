@@ -10,28 +10,27 @@ class FinancialEvaluatorAgent(BaseAgent):
         super().__init__("B1_FinancialEvaluator", "Financial Evaluator")
 
     def run(self, input_data):
-        ideas = input_data["ideas"]
+        # FIX: Accept a single idea instead of a list
+        idea = input_data["idea"]
 
         prompt = f"""
         You are a financial analyst.
 
-        Evaluate the financial potential of these ideas:
+        Evaluate the financial potential of the following startup idea:
 
-        {json.dumps(ideas, indent=2)}
+        {json.dumps(idea, indent=2)}
 
-        For each idea, score it from 0 to 100 based on:
+        Score it from 0 to 100 based on:
         - ROI potential
         - Cost efficiency
         - Market demand
 
         Return ONLY valid JSON in this exact format:
 
-        [
-          {{
+        {{
             "id": "idea_1",
             "score": 85
-          }}
-        ]
+        }}
         """
 
         response = client.chat.completions.create(
@@ -41,28 +40,31 @@ class FinancialEvaluatorAgent(BaseAgent):
         )
 
         raw = response.choices[0].message.content
-        scores = self._safe_parse(raw)
+        parsed = self._safe_parse(raw)
 
-        # Ensure structure is always a list of {id, score}
-        clean = []
-        for item in scores:
-            if isinstance(item, dict) and "id" in item and "score" in item:
-                try:
-                    clean.append({"id": str(item["id"]), "score": float(item["score"])})
-                except:
-                    continue
+        # Ensure valid structure
+        if isinstance(parsed, dict) and "id" in parsed and "score" in parsed:
+            return {
+                "id": str(parsed["id"]),
+                "score": float(parsed["score"])
+            }
 
-        return {"financial_scores": clean}
+        # Fallback if model returns weird output
+        return {
+            "id": str(idea["id"]),
+            "score": 50.0
+        }
 
     def _safe_parse(self, text):
         try:
             return json.loads(text)
         except:
-            start = text.find("[")
-            end = text.rfind("]") + 1
+            # Try to extract JSON object
+            start = text.find("{")
+            end = text.rfind("}") + 1
             if start != -1 and end != -1:
                 try:
                     return json.loads(text[start:end])
                 except:
                     pass
-        return []
+        return {}

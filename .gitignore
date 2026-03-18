@@ -1,0 +1,7 @@
+.env
+__pycache__/
+users.json
+.env
+__pycache__/
+users.json
+*.log

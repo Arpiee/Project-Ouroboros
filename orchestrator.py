@@ -18,6 +18,7 @@ class Orchestrator:
         self.execution_plan = ExecutionPlanAgent()
 
     def run_session(self, budget, goal, constraints, time_horizon):
+
         # A1: Trends
         trends_out = self.trend_scanner.run({"goal": goal})
 
@@ -32,23 +33,34 @@ class Orchestrator:
         # Build id → idea map
         ideas_by_id = {idea["id"]: idea for idea in ideas if "id" in idea}
 
-        # B1: Financial
-        financial_out = self.financial_evaluator.run({"ideas": ideas})
-        # B2: Impact
-        impact_out = self.impact_evaluator.run({"ideas": ideas})
-        # B3: Ethics
-        ethics_out = self.ethics_evaluator.run({"ideas": ideas})
+        # -------------------------------
+        # B: SCORE EACH IDEA INDIVIDUALLY
+        # -------------------------------
 
-        financial_scores = financial_out["financial_scores"]
-        impact_scores = impact_out["impact_scores"]
-        ethics_scores = ethics_out["ethics_scores"]
+        financial_scores = []
+        impact_scores = []
+        ethics_scores = []
 
-        # Normalize scores by id
-        fin_by_id = {str(item["id"]): float(item["score"]) for item in financial_scores}
-        imp_by_id = {str(item["id"]): float(item["score"]) for item in impact_scores}
-        eth_by_id = {str(item["id"]): float(item["score"]) for item in ethics_scores}
+        for idea in ideas:
+            idea_id = idea["id"]
 
-        # C1: Selector uses id-based scores
+            # Score individually
+            fin = self.financial_evaluator.run({"idea": idea})
+            imp = self.impact_evaluator.run({"idea": idea})
+            eth = self.ethics_evaluator.run({"idea": idea})
+
+            financial_scores.append({"id": idea_id, "score": float(fin["score"])})
+            impact_scores.append({"id": idea_id, "score": float(imp["score"])})
+            ethics_scores.append({"id": idea_id, "score": float(eth["score"])})
+
+        # Convert to id → score maps
+        fin_by_id = {str(item["id"]): item["score"] for item in financial_scores}
+        imp_by_id = {str(item["id"]): item["score"] for item in impact_scores}
+        eth_by_id = {str(item["id"]): item["score"] for item in ethics_scores}
+
+        # -------------------------------
+        # C: SELECTOR
+        # -------------------------------
         selector_out = self.selector.run({
             "ideas": ideas,
             "financial_scores": financial_scores,
@@ -58,19 +70,25 @@ class Orchestrator:
 
         top_idea = selector_out["top_recommendations"][0]["idea"]
 
-        # D1: Execution plan
+        # -------------------------------
+        # D: EXECUTION PLAN
+        # -------------------------------
         execution_out = self.execution_plan.run({
             "idea": top_idea,
             "time_horizon_days": time_horizon
         })
 
-        # Build title-keyed scores for UI convenience
+        # -------------------------------
+        # BUILD TITLE-KEYED SCORE MAPS
+        # -------------------------------
         fin_by_title = {}
         imp_by_title = {}
         eth_by_title = {}
+
         for idea in ideas:
             iid = str(idea.get("id", ""))
             title = idea.get("title", iid)
+
             fin_by_title[title] = fin_by_id.get(iid, 0)
             imp_by_title[title] = imp_by_id.get(iid, 0)
             eth_by_title[title] = eth_by_id.get(iid, 0)
@@ -78,7 +96,7 @@ class Orchestrator:
         return {
             "trends": trends_out["trends"],
             "ideas": ideas,
-            "financial_scores": financial_scores,   # list of {id, score}
+            "financial_scores": financial_scores,
             "impact_scores": impact_scores,
             "ethics_scores": ethics_scores,
             "financial_scores_by_title": fin_by_title,

@@ -1,10 +1,15 @@
 import streamlit as st
 from orchestrator import Orchestrator
+from auth import signup, login
 import pandas as pd
 import altair as alt
 from groq import Groq
 import os
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -25,8 +30,52 @@ else:
     CARD_TEXT = "#000000"
     BANNER_BG = "#f0f2f6"
 
+# ---------------- AUTHENTICATION ----------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+
+    st.title("🔐 Welcome to Ouroboros Venture Advisor")
+
+    tab1, tab2 = st.tabs(["Login", "Signup"])
+
+    with tab1:
+        st.subheader("Login")
+        username = st.text_input("Username", key="login_user")
+        password = st.text_input("Password", type="password", key="login_pass")
+        if st.button("Login"):
+            ok, msg = login(username, password)
+            if ok:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.success("Login successful! Redirecting...")
+                st.rerun()
+            else:
+                st.error(msg)
+
+    with tab2:
+        st.subheader("Signup")
+        new_user = st.text_input("Choose a username", key="signup_user")
+        new_pass = st.text_input("Choose a password", type="password", key="signup_pass")
+        if st.button("Create Account"):
+            ok, msg = signup(new_user, new_pass)
+            if ok:
+                st.success(msg)
+            else:
+                st.error(msg)
+
+    st.stop()
+
 # ---------------- SIDEBAR ----------------
-st.sidebar.title("⚙️ Input Parameters")
+st.sidebar.title(f"Welcome, {st.session_state.username} 👋")
+
+st.sidebar.markdown("---")
+if st.sidebar.button("Logout"):
+    st.session_state.logged_in = False
+    st.experimental_rerun()
+
+st.sidebar.markdown("---")
 
 investment = st.sidebar.number_input(
     "Investment Amount ($)", min_value=50, max_value=100000, value=300
@@ -45,7 +94,6 @@ time_horizon = st.sidebar.slider(
     "Time Horizon (days)", min_value=7, max_value=60, value=30
 )
 
-st.sidebar.markdown("---")
 run_button = st.sidebar.button("🚀 Generate Ideas")
 
 # ---------------- MAIN TITLE ----------------
@@ -57,7 +105,7 @@ st.markdown(
 
 result = None
 
-# ---------------- RUN ORCHESTRATOR WITH ANIMATION ----------------
+# ---------------- RUN ORCHESTRATOR ----------------
 if run_button:
     status = st.empty()
     status.markdown("🧠 Scanning trends...")
@@ -131,9 +179,9 @@ if result:
 
         ideas = [i["title"] for i in result["ideas"]]
 
-        financial_scores = result.get("financial_scores_by_title", {})
-        impact_scores = result.get("impact_scores_by_title", {})
-        ethics_scores = result.get("ethics_scores_by_title", {})
+        financial_scores = result["financial_scores_by_title"]
+        impact_scores = result["impact_scores_by_title"]
+        ethics_scores = result["ethics_scores_by_title"]
 
         data = []
         for title in ideas:
@@ -232,70 +280,6 @@ if result:
                 unsafe_allow_html=True
             )
 
-    # ---------- PORTFOLIO SIMULATOR ----------
-    with st.expander("💼 Portfolio Simulator (Virtual Only)", expanded=False):
-        st.write("This is a simulation only.")
-
-        top_ideas = [rec["idea"]["title"] for rec in result["top_recommendations"]]
-        allocations = {}
-
-        if top_ideas:
-            mode = st.radio("Allocation Mode", ["Equal Allocation", "Custom Allocation"], horizontal=True)
-
-            if mode == "Equal Allocation":
-                per = investment / len(top_ideas)
-                allocations = {title: per for title in top_ideas}
-                st.write(f"Each idea receives **${per:.2f}**.")
-            else:
-                remaining = investment
-                for title in top_ideas:
-                    val = st.number_input(
-                        f"Allocate to {title}",
-                        min_value=0.0,
-                        max_value=float(remaining),
-                        value=0.0,
-                        key=f"alloc_{title}"
-                    )
-                    allocations[title] = val
-                    remaining = investment - sum(allocations.values())
-
-                st.write(f"Remaining unallocated: **${remaining:.2f}**")
-
-            # Pie chart
-            alloc_df = pd.DataFrame(
-                [{"Idea": k, "Amount": v} for k, v in allocations.items() if v > 0]
-            )
-            if not alloc_df.empty:
-                st.markdown("#### Allocation Pie Chart")
-                pie = alt.Chart(alloc_df).mark_arc().encode(
-                    theta="Amount:Q",
-                    color="Idea:N"
-                )
-                st.altair_chart(pie, use_container_width=True)
-
-            # Diversification score
-            funded = [k for k, v in allocations.items() if v > 0]
-            diversification = len(funded) / len(top_ideas) * 100 if funded else 0
-            st.write(f"**Diversification score:** {diversification:.1f} / 100")
-
-            # Risk buckets
-            risk_rows = []
-            for title in funded:
-                ethics = ethics_scores.get(title, 50)
-
-                if ethics >= 70:
-                    bucket = "Low"
-                elif ethics >= 40:
-                    bucket = "Medium"
-                else:
-                    bucket = "High"
-
-                risk_rows.append({"Idea": title, "Risk Bucket": bucket})
-
-            if risk_rows:
-                st.write("**Risk buckets:**")
-                st.dataframe(pd.DataFrame(risk_rows), use_container_width=True)
-
     # ---------- EXECUTION PLAN ----------
     with st.expander("🗂 Execution Plan for Top Idea", expanded=True):
         for step in result["execution_plan"]:
@@ -314,127 +298,6 @@ if result:
                 """,
                 unsafe_allow_html=True
             )
-
-    # ---------- EXPORT FEATURES ----------
-    st.markdown("### 📄 Export Data")
-
-    ideas_df = pd.DataFrame(result["ideas"])
-    scores_df = pd.DataFrame({
-        "Idea": list(financial_scores.keys()),
-        "Financial Score": list(financial_scores.values()),
-        "Impact Score": list(impact_scores.values()),
-        "Ethics Score": list(ethics_scores.values()),
-    })
-    exec_df = pd.DataFrame(result["execution_plan"])
-
-    st.download_button(
-        "⬇️ Download Ideas (CSV)",
-        data=ideas_df.to_csv(index=False),
-        file_name="ideas.csv",
-        mime="text/csv",
-    )
-
-    st.download_button(
-        "⬇️ Download Scores (CSV)",
-        data=scores_df.to_csv(index=False),
-        file_name="scores.csv",
-        mime="text/csv",
-    )
-
-    st.download_button(
-        "⬇️ Download Execution Plan (CSV)",
-        data=exec_df.to_csv(index=False),
-        file_name="execution_plan.csv",
-        mime="text/csv",
-    )
-
-    html_report = f"""
-    <h1>Ouroboros Venture Advisor Report</h1>
-    <h2>Top Idea: {top['title']}</h2>
-    <p>{top['description']}</p>
-    <p><b>Score:</b> {score:.2f}</p>
-    <p><b>Budget Required:</b> ${top['budget_required']}</p>
-    <hr>
-    <h2>Ideas</h2>
-    {ideas_df.to_html(index=False)}
-    <hr>
-    <h2>Scores</h2>
-    {scores_df.to_html(index=False)}
-    <hr>
-    <h2>Execution Plan</h2>
-    {exec_df.to_html(index=False)}
-    """
-
-    st.download_button(
-        "⬇️ Download Report (HTML)",
-        data=html_report,
-        file_name="venture_report.html",
-        mime="text/html",
-    )
-
-    # ---------- GROQ CHATBOT ASSISTANT ----------
-    with st.expander("🧠 Assistant (Chatbot)", expanded=False):
-        st.markdown(
-            "Ask questions about the ideas, scores, and plan. "
-            "This AI assistant does **not** provide financial advice."
-        )
-
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = []
-
-        # Show full chat history
-        for role, msg in st.session_state.chat_history:
-            if role == "user":
-                st.markdown(f"**You:** {msg}")
-            else:
-                st.markdown(f"**Assistant:** {msg}")
-
-        user_q = st.text_input("Your question:", key="assistant_input")
-
-        if st.button("Ask", key="assistant_button") and user_q:
-            st.session_state.chat_history.append(("user", user_q))
-
-            context = {
-                "top_idea": top,
-                "scores": {
-                    "financial": financial_scores,
-                    "impact": impact_scores,
-                    "ethics": ethics_scores,
-                },
-                "ideas": result["ideas"],
-                "execution_plan": result["execution_plan"],
-            }
-
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an analytical assistant for a venture idea tool. "
-                        "Explain ideas, scores, and plans clearly. "
-                        "Do NOT give real financial, legal, or investment advice."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": "Here is the current session context:\n" + json.dumps(context, indent=2),
-                },
-            ]
-
-            # Add last few messages
-            for role, msg in st.session_state.chat_history[-6:]:
-                messages.append({"role": role, "content": msg})
-
-            messages.append({"role": "user", "content": user_q})
-
-            with st.spinner("Thinking..."):
-                resp = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
-                    messages=messages,
-                    temperature=0.4,
-                )
-                answer = resp.choices[0].message.content.strip()
-
-            st.session_state.chat_history.append(("assistant", answer))
 
 else:
     st.info("Set your parameters in the sidebar and click **Generate Ideas** to begin.")

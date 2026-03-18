@@ -10,21 +10,26 @@ class EthicsEvaluatorAgent(BaseAgent):
         super().__init__("B3_EthicsEvaluator", "Ethics Evaluator")
 
     def run(self, input_data):
-        ideas = input_data["ideas"]
+        # FIX: Accept a single idea instead of a list
+        idea = input_data["idea"]
 
         prompt = f"""
-        Evaluate the ethical risks of these ideas:
-        {ideas}
+        You are an expert in ethical risk assessment.
 
-        Score each idea from 0–100 (lower = more ethical).
-        Return ONLY JSON:
+        Evaluate the ethical risks of the following startup idea:
 
-        [
-          {{
+        {json.dumps(idea, indent=2)}
+
+        Score its ethical risk from 0 to 100:
+        - 0 = extremely ethical
+        - 100 = extremely risky
+
+        Return ONLY valid JSON in this exact format:
+
+        {{
             "id": "idea_1",
-            "ethics_score": 20
-          }}
-        ]
+            "score": 20
+        }}
         """
 
         response = client.chat.completions.create(
@@ -34,17 +39,31 @@ class EthicsEvaluatorAgent(BaseAgent):
         )
 
         raw = response.choices[0].message.content
-        return {"ethics_scores": self._safe_parse(raw)}
+        parsed = self._safe_parse(raw)
+
+        # Ensure valid structure
+        if isinstance(parsed, dict) and "id" in parsed and "score" in parsed:
+            return {
+                "id": str(parsed["id"]),
+                "score": float(parsed["score"])
+            }
+
+        # Fallback if model returns weird output
+        return {
+            "id": str(idea["id"]),
+            "score": 50.0
+        }
 
     def _safe_parse(self, text):
         try:
             return json.loads(text)
         except:
-            start = text.find("[")
-            end = text.rfind("]") + 1
+            # Try to extract JSON object
+            start = text.find("{")
+            end = text.rfind("}") + 1
             if start != -1 and end != -1:
                 try:
                     return json.loads(text[start:end])
                 except:
                     pass
-        return []
+        return {}

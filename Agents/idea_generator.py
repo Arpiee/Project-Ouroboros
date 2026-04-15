@@ -1,52 +1,79 @@
-from .base import BaseAgent
-from groq import Groq
 import os
 import json
+from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class IdeaGeneratorAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("A2_IdeaGenerator", "AI Idea Generator")
+class IdeaGeneratorAgent:
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def run(self, input_data):
-        budget = input_data.get("budget", 100)
-        goal = input_data.get("goal", "general")
+    def _parse_json(self, content: str):
+        """Attempts strict JSON parsing, then repairs if needed."""
+        try:
+            return json.loads(content)
+        except Exception:
+            try:
+                start = content.index("[")
+                end = content.rindex("]") + 1
+                return json.loads(content[start:end])
+            except Exception:
+                return [
+                    {
+                        "title": "Fallback Idea",
+                        "description": "Model returned invalid JSON; this is a placeholder idea.",
+                        "category": "General",
+                        "why_now": "Fallback.",
+                        "target_customer": "General builders.",
+                        "problem": "No valid ideas generated.",
+                        "revenue_model": "Subscription",
+                        "stage": "Idea only"
+                    }
+                ]
+
+    def run(self, payload: dict):
+        budget = payload.get("budget", 1000)
+        goal = payload.get("goal", "")
+        constraints = payload.get("constraints", "")
+        trends = payload.get("trends", {})
 
         prompt = f"""
-        Generate 20 business ideas under ${budget} in the category: "{goal}".
-        Return ONLY JSON in this format:
+You are a startup idea generator.
 
-        [
-          {{
-            "id": "idea_1",
-            "title": "AI Resume Tool",
-            "description": "A tool that analyzes resumes using AI.",
-            "budget_required": 40,
-            "target_user": "Students",
-            "time_horizon_days": 14
-          }}
-        ]
-        """
+Generate 5 concrete startup ideas that match:
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+Goal: {goal}
+Budget: {budget}
+Constraints: {constraints}
+Trend context: {trends}
+
+Return ONLY valid JSON. No explanations, no markdown, no text outside the JSON.
+
+Use this exact structure:
+
+[
+  {{
+    "title": "short idea name",
+    "description": "2-3 sentence description",
+    "category": "short category label",
+    "why_now": "short explanation",
+    "target_customer": "short description",
+    "problem": "short description",
+    "revenue_model": "short description",
+    "stage": "Idea only"
+  }}
+]
+"""
+
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7
         )
 
-        raw = response.choices[0].message.content
-        return {"ideas": self._safe_parse(raw)}
+        content = response.choices[0].message.content.strip()
 
-    def _safe_parse(self, text):
-        try:
-            return json.loads(text)
-        except:
-            start = text.find("[")
-            end = text.rfind("]") + 1
-            if start != -1 and end != -1:
-                try:
-                    return json.loads(text[start:end])
-                except:
-                    pass
-        return []
+        if self.debug:
+            print("IdeaGenerator RAW:", content)
+
+        return self._parse_json(content)

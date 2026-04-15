@@ -1,0 +1,20 @@
+{
+  "helloai": {
+    "email": "arpit.kohli01@gmail.com",
+    "phone": "1234567890",
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Barrie",
+    "postal_code": "L4N0K5",
+    "address": " 14 Kensington Trail"
+  },
+  "helloworld": {
+    "email": "arpit.kohli01@gmail.com",
+    "phone": "1234567890",
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Barrie",
+    "postal_code": "L4N0K5",
+    "address": "Kensington Trail"
+  }
+}

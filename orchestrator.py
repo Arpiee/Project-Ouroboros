@@ -1,107 +1,167 @@
-from Agents.trend_scanner import TrendScannerAgent
-from Agents.idea_generator import IdeaGeneratorAgent
-from Agents.financial_evaluator import FinancialEvaluatorAgent
-from Agents.impact_evaluator import ImpactEvaluatorAgent
-from Agents.ethics_evaluator import EthicsEvaluatorAgent
-from Agents.selector import SelectorAgent
-from Agents.execution_plan import ExecutionPlanAgent
+import os
+from groq import Groq
+
+# Import updated hybrid agents
+from agents.trend_scanner import TrendScannerAgent
+from agents.financial_evaluator import FinancialEvaluatorAgent
+from agents.impact_evaluator import ImpactEvaluatorAgent
+from agents.ethics_evaluator import EthicsEvaluatorAgent
+from agents.selector import SelectorAgent
+from agents.execution_plan import ExecutionPlanAgent
+from agents.idea_generator import IdeaGeneratorAgent
 
 
 class Orchestrator:
-    def __init__(self):
-        self.trend_scanner = TrendScannerAgent()
-        self.idea_generator = IdeaGeneratorAgent()
-        self.financial_evaluator = FinancialEvaluatorAgent()
-        self.impact_evaluator = ImpactEvaluatorAgent()
-        self.ethics_evaluator = EthicsEvaluatorAgent()
-        self.selector = SelectorAgent()
-        self.execution_plan = ExecutionPlanAgent()
+    """
+    Hybrid orchestrator that supports:
+    - Idea Validator Mode (new)
+    - Idea Generator Mode (old)
+    """
 
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+        # Initialize all hybrid agents
+        self.trend_agent = TrendScannerAgent(debug=debug)
+        self.financial_agent = FinancialEvaluatorAgent(debug=debug)
+        self.impact_agent = ImpactEvaluatorAgent(debug=debug)
+        self.ethics_agent = EthicsEvaluatorAgent(debug=debug)
+        self.selector_agent = SelectorAgent(debug=debug)
+        self.execution_plan_agent = ExecutionPlanAgent(debug=debug)
+        self.idea_generator_agent = IdeaGeneratorAgent(debug=debug)
+
+    # ---------------------------------------------------------
+    # NEW MODE: IDEA VALIDATION (client pivot)
+    # ---------------------------------------------------------
+    def validate_idea(
+        self,
+        idea_description: str,
+        target_customer: str,
+        problem: str,
+        competitors: str,
+        revenue_model: str,
+        stage: str,
+    ):
+        # Build idea payload
+        idea_payload = {
+            "idea_description": idea_description,
+            "target_customer": target_customer,
+            "problem": problem,
+            "competitors": competitors,
+            "revenue_model": revenue_model,
+            "stage": stage,
+        }
+
+        # Run all agents
+        trends_out = self.trend_agent.run(idea_payload)
+        financial_out = self.financial_agent.run({"idea": idea_payload})
+        impact_out = self.impact_agent.run({"idea": idea_payload})
+        ethics_out = self.ethics_agent.run({"idea": idea_payload})
+
+        # Selector combines scores
+        selector_out = self.selector_agent.run({
+            "trends": trends_out,
+            "financial": financial_out,
+            "impact": impact_out,
+            "ethics": ethics_out,
+        })
+
+        # Execution plan based on stage
+        execution_plan = self.execution_plan_agent.run({
+            "idea": idea_payload,
+            "stage": stage
+        })
+
+        # Final result
+        result = {
+            "idea": idea_payload,
+            "trends": trends_out,
+            "financial": financial_out,
+            "impact": impact_out,
+            "ethics": ethics_out,
+            "scores": selector_out["scores"],
+            "summary": selector_out["summary"],
+            "strengths": selector_out["strengths"],
+            "weaknesses": selector_out["weaknesses"],
+            "next_steps": execution_plan,
+        }
+
+        if self.debug:
+            result["debug"] = {
+                "raw_trends": trends_out,
+                "raw_financial": financial_out,
+                "raw_impact": impact_out,
+                "raw_ethics": ethics_out,
+            }
+
+        return result
+
+    # ---------------------------------------------------------
+    # OLD MODE: IDEA GENERATOR (your original system)
+    # ---------------------------------------------------------
     def run_session(self, budget, goal, constraints, time_horizon):
+        """
+        Old idea generator flow preserved for backward compatibility.
+        """
 
-        # A1: Trends
-        trends_out = self.trend_scanner.run({"goal": goal})
-
-        # A2: Ideas
-        ideas_out = self.idea_generator.run({
-            "budget": budget,
+        # 1. Scan trends
+        trends = self.trend_agent.run({
             "goal": goal,
             "constraints": constraints
         })
-        ideas = ideas_out["ideas"]
 
-        # Build id → idea map
-        ideas_by_id = {idea["id"]: idea for idea in ideas if "id" in idea}
-
-        # -------------------------------
-        # B: SCORE EACH IDEA INDIVIDUALLY
-        # -------------------------------
-
-        financial_scores = []
-        impact_scores = []
-        ethics_scores = []
-
-        for idea in ideas:
-            idea_id = idea["id"]
-
-            # Score individually
-            fin = self.financial_evaluator.run({"idea": idea})
-            imp = self.impact_evaluator.run({"idea": idea})
-            eth = self.ethics_evaluator.run({"idea": idea})
-
-            financial_scores.append({"id": idea_id, "score": float(fin["score"])})
-            impact_scores.append({"id": idea_id, "score": float(imp["score"])})
-            ethics_scores.append({"id": idea_id, "score": float(eth["score"])})
-
-        # Convert to id → score maps
-        fin_by_id = {str(item["id"]): item["score"] for item in financial_scores}
-        imp_by_id = {str(item["id"]): item["score"] for item in impact_scores}
-        eth_by_id = {str(item["id"]): item["score"] for item in ethics_scores}
-
-        # -------------------------------
-        # C: SELECTOR
-        # -------------------------------
-        selector_out = self.selector.run({
-            "ideas": ideas,
-            "financial_scores": financial_scores,
-            "impact_scores": impact_scores,
-            "ethics_scores": ethics_scores
+        # 2. Generate deterministic ideas
+        ideas = self.idea_generator_agent.run({
+            "budget": budget,
+            "goal": goal,
+            "constraints": constraints,
+            "trends": trends
         })
 
-        top_idea = selector_out["top_recommendations"][0]["idea"]
-
-        # -------------------------------
-        # D: EXECUTION PLAN
-        # -------------------------------
-        execution_out = self.execution_plan.run({
-            "idea": top_idea,
-            "time_horizon_days": time_horizon
-        })
-
-        # -------------------------------
-        # BUILD TITLE-KEYED SCORE MAPS
-        # -------------------------------
-        fin_by_title = {}
-        imp_by_title = {}
-        eth_by_title = {}
-
+        # 3. Score each idea financially
+        financial_scores = {}
         for idea in ideas:
-            iid = str(idea.get("id", ""))
-            title = idea.get("title", iid)
+            out = self.financial_agent.run({
+                "idea": idea,
+                "budget": budget,
+                "time_horizon": time_horizon
+            })
+            financial_scores[idea["title"]] = out.get("financial_score", 0)
 
-            fin_by_title[title] = fin_by_id.get(iid, 0)
-            imp_by_title[title] = imp_by_id.get(iid, 0)
-            eth_by_title[title] = eth_by_id.get(iid, 0)
+        # 4. Score each idea for impact
+        impact_scores = {}
+        for idea in ideas:
+            out = self.impact_agent.run({"idea": idea})
+            impact_scores[idea["title"]] = out.get("impact_score", 0)
 
-        return {
-            "trends": trends_out["trends"],
+        # 5. Score each idea for ethics
+        ethics_scores = {}
+        for idea in ideas:
+            out = self.ethics_agent.run({"idea": idea})
+            ethics_scores[idea["title"]] = out.get("risk_score", 0)
+
+        # 6. Rank ideas
+        selector_out = self.selector_agent.run({
             "ideas": ideas,
             "financial_scores": financial_scores,
             "impact_scores": impact_scores,
             "ethics_scores": ethics_scores,
-            "financial_scores_by_title": fin_by_title,
-            "impact_scores_by_title": imp_by_title,
-            "ethics_scores_by_title": eth_by_title,
+        })
+
+        # 7. Execution plan for top idea
+        top_idea = selector_out["top_recommendations"][0]["idea"]
+        execution_plan = self.execution_plan_agent.run({
+            "idea": top_idea,
+            "time_horizon": time_horizon
+        })
+
+        return {
+            "ideas": ideas,
+            "trends": trends,
+            "financial_scores": financial_scores,
+            "impact_scores": impact_scores,
+            "ethics_scores": ethics_scores,
             "top_recommendations": selector_out["top_recommendations"],
-            "execution_plan": execution_out["execution_plan"]
+            "execution_plan": execution_plan,
         }

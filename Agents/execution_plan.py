@@ -1,54 +1,67 @@
-from .base import BaseAgent
-from groq import Groq
 import os
 import json
+from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class ExecutionPlanAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("D1_ExecutionPlan", "Execution Plan Generator")
+class ExecutionPlanAgent:
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def run(self, input_data):
-        idea = input_data["idea"]
-        days = input_data.get("time_horizon_days", 14)
+    def _parse_json(self, content: str):
+        """Attempts strict JSON parsing, then repairs if needed."""
+        try:
+            return json.loads(content)
+        except Exception:
+            try:
+                start = content.index("[")
+                end = content.rindex("]") + 1
+                return json.loads(content[start:end])
+            except Exception:
+                return [
+                    {"week": 1, "tasks": ["Define problem and customer clearly.", "Talk to 5 potential users."]},
+                    {"week": 2, "tasks": ["Sketch MVP scope.", "Map competitors and differentiation."]},
+                    {"week": 3, "tasks": ["Build or fake the MVP.", "Run first user tests."]},
+                    {"week": 4, "tasks": ["Refine based on feedback.", "Decide next experiment or pivot."]},
+                ]
+
+    def run(self, payload: dict):
+        idea = payload.get("idea", {})
+        stage = payload.get("stage", idea.get("stage", "Idea only"))
+        time_horizon = payload.get("time_horizon", 30)
 
         prompt = f"""
-        Create a detailed day-by-day execution plan for this idea:
+You are a startup execution coach.
 
-        Title: {idea['title']}
-        Description: {idea['description']}
-        Budget Required: {idea['budget_required']}
+Create a 30-day execution roadmap for this idea, tailored to its stage.
 
-        Create a {days}-day plan.
-        Return ONLY JSON:
+Return ONLY valid JSON. No explanations, no markdown, no text outside the JSON.
 
-        [
-          {{
-            "day": 1,
-            "task": "Research competitors"
-          }}
-        ]
-        """
+Use this exact structure:
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+[
+  {{
+    "week": 1,
+    "tasks": ["task 1", "task 2", "task 3"]
+  }}
+]
+
+Idea: {idea.get("idea_description", "")}
+Problem: {idea.get("problem", "")}
+Customer: {idea.get("target_customer", "")}
+Stage: {stage}
+Time Horizon (days): {time_horizon}
+"""
+
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7
+            temperature=0.4
         )
 
-        raw = response.choices[0].message.content
-        return {"execution_plan": self._safe_parse(raw)}
+        content = response.choices[0].message.content.strip()
 
-    def _safe_parse(self, text):
-        try:
-            return json.loads(text)
-        except:
-            start = text.find("[")
-            end = text.rfind("]") + 1
-            if start != -1 and end != -1:
-                try:
-                    return json.loads(text[start:end])
-                except:
-                    pass
-        return []
+        if self.debug:
+            print("ExecutionPlan RAW:", content)
+
+        return self._parse_json(content)

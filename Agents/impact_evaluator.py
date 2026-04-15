@@ -1,70 +1,68 @@
-from .base import BaseAgent
-from groq import Groq
 import os
 import json
+from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class ImpactEvaluatorAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("B2_ImpactEvaluator", "Impact Evaluator")
+class ImpactEvaluatorAgent:
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def run(self, input_data):
-        # FIX: Accept a single idea instead of a list
-        idea = input_data["idea"]
+    def _parse_json(self, content: str):
+        """Attempts strict JSON parsing, then repairs if needed."""
+        try:
+            return json.loads(content)
+        except Exception:
+            try:
+                start = content.index("{")
+                end = content.rindex("}") + 1
+                return json.loads(content[start:end])
+            except Exception:
+                return {
+                    "impact_score": 50,
+                    "user_impact": "Unknown",
+                    "market_impact": "Unknown",
+                    "long_term_potential": "Unknown",
+                    "impact_drivers": ["Model returned invalid JSON."],
+                    "summary": "Impact analysis unavailable due to parsing error."
+                }
+
+    def run(self, payload: dict):
+        idea = payload.get("idea", {})
 
         prompt = f"""
-        You are an expert in evaluating social and market impact.
+You are a startup impact analyst.
 
-        Evaluate the following startup idea:
+Evaluate the potential impact of this idea on users and the market.
 
-        {json.dumps(idea, indent=2)}
+Return ONLY valid JSON. No explanations, no markdown, no text outside the JSON.
 
-        Score its impact from 0 to 100 based on:
-        - Social value
-        - Market relevance
-        - Long-term sustainability
+Use this exact structure:
 
-        Return ONLY valid JSON in this exact format:
+{{
+  "impact_score": 0,
+  "user_impact": "short text",
+  "market_impact": "short text",
+  "long_term_potential": "short text",
+  "impact_drivers": ["bullet 1", "bullet 2"],
+  "summary": "1-2 sentence summary"
+}}
 
-        {{
-            "id": "idea_1",
-            "score": 72
-        }}
-        """
+Idea: {idea.get("idea_description", "")}
+Problem: {idea.get("problem", "")}
+Customer: {idea.get("target_customer", "")}
+Stage: {idea.get("stage", "")}
+"""
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3
+            temperature=0.4
         )
 
-        raw = response.choices[0].message.content
-        parsed = self._safe_parse(raw)
+        content = response.choices[0].message.content.strip()
 
-        # Ensure valid structure
-        if isinstance(parsed, dict) and "id" in parsed and "score" in parsed:
-            return {
-                "id": str(parsed["id"]),
-                "score": float(parsed["score"])
-            }
+        if self.debug:
+            print("ImpactEvaluator RAW:", content)
 
-        # Fallback if model returns weird output
-        return {
-            "id": str(idea["id"]),
-            "score": 50.0
-        }
-
-    def _safe_parse(self, text):
-        try:
-            return json.loads(text)
-        except:
-            # Try to extract JSON object
-            start = text.find("{")
-            end = text.rfind("}") + 1
-            if start != -1 and end != -1:
-                try:
-                    return json.loads(text[start:end])
-                except:
-                    pass
-        return {}
+        return self._parse_json(content)

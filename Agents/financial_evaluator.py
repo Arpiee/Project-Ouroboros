@@ -1,70 +1,74 @@
-from .base import BaseAgent
-from groq import Groq
 import os
 import json
+from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class FinancialEvaluatorAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("B1_FinancialEvaluator", "Financial Evaluator")
+class FinancialEvaluatorAgent:
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def run(self, input_data):
-        # FIX: Accept a single idea instead of a list
-        idea = input_data["idea"]
+    def _parse_json(self, content: str):
+        """Attempts strict JSON parsing, then repairs if needed."""
+        try:
+            return json.loads(content)
+        except Exception:
+            try:
+                start = content.index("{")
+                end = content.rindex("}") + 1
+                return json.loads(content[start:end])
+            except Exception:
+                return {
+                    "financial_score": 50,
+                    "revenue_potential": "Unknown",
+                    "cost_intensity": "Unknown",
+                    "payback_period": "Unknown",
+                    "key_assumptions": ["Model returned invalid JSON."],
+                    "summary": "Financial analysis unavailable due to parsing error."
+                }
+
+    def run(self, payload: dict):
+        idea = payload.get("idea", {})
+        budget = payload.get("budget", None)
+        time_horizon = payload.get("time_horizon", None)
 
         prompt = f"""
-        You are a financial analyst.
+You are a startup financial analyst.
 
-        Evaluate the financial potential of the following startup idea:
+Evaluate the financial potential of this idea.
 
-        {json.dumps(idea, indent=2)}
+Return ONLY valid JSON. No explanations, no markdown, no text outside the JSON.
 
-        Score it from 0 to 100 based on:
-        - ROI potential
-        - Cost efficiency
-        - Market demand
+Use this exact structure:
 
-        Return ONLY valid JSON in this exact format:
+{{
+  "financial_score": 0,
+  "revenue_potential": "short text",
+  "cost_intensity": "short text",
+  "payback_period": "short text",
+  "key_assumptions": ["bullet 1", "bullet 2"],
+  "summary": "1-2 sentence summary"
+}}
 
-        {{
-            "id": "idea_1",
-            "score": 85
-        }}
-        """
+Idea: {idea.get("idea_description", "")}
+Problem: {idea.get("problem", "")}
+Customer: {idea.get("target_customer", "")}
+Competitors: {idea.get("competitors", "")}
+Revenue Model: {idea.get("revenue_model", "")}
+Stage: {idea.get("stage", "")}
+Budget: {budget}
+Time Horizon (days): {time_horizon}
+"""
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3
+            temperature=0.4
         )
 
-        raw = response.choices[0].message.content
-        parsed = self._safe_parse(raw)
+        content = response.choices[0].message.content.strip()
 
-        # Ensure valid structure
-        if isinstance(parsed, dict) and "id" in parsed and "score" in parsed:
-            return {
-                "id": str(parsed["id"]),
-                "score": float(parsed["score"])
-            }
+        if self.debug:
+            print("FinancialEvaluator RAW:", content)
 
-        # Fallback if model returns weird output
-        return {
-            "id": str(idea["id"]),
-            "score": 50.0
-        }
-
-    def _safe_parse(self, text):
-        try:
-            return json.loads(text)
-        except:
-            # Try to extract JSON object
-            start = text.find("{")
-            end = text.rfind("}") + 1
-            if start != -1 and end != -1:
-                try:
-                    return json.loads(text[start:end])
-                except:
-                    pass
-        return {}
+        return self._parse_json(content)

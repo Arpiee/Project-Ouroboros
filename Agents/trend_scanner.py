@@ -1,47 +1,73 @@
-from .base import BaseAgent
-from groq import Groq
 import os
 import json
+from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-class TrendScannerAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("A1_TrendScanner", "Trend Scanner")
+class TrendScannerAgent:
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def run(self, input_data):
-        goal = input_data.get("goal", "general")
+    def _parse_json(self, content: str):
+        """Attempts strict JSON parsing, then repairs if needed."""
+        try:
+            return json.loads(content)
+        except Exception:
+            try:
+                start = content.index("{")
+                end = content.rindex("}") + 1
+                return json.loads(content[start:end])
+            except Exception:
+                return {
+                    "trend_score": 50,
+                    "trend_fit": "Unclear trend fit",
+                    "trend_risks": ["Model returned invalid JSON."],
+                    "trend_opportunities": [],
+                    "summary": "Trend analysis unavailable due to parsing error."
+                }
+
+    def run(self, payload: dict):
+        idea = payload.get("idea_description", "") or payload.get("idea", {}).get("idea_description", "")
+        problem = payload.get("problem", "") or payload.get("idea", {}).get("problem", "")
+        customer = payload.get("target_customer", "") or payload.get("idea", {}).get("target_customer", "")
+        competitors = payload.get("competitors", "") or payload.get("idea", {}).get("competitors", "")
+        revenue_model = payload.get("revenue_model", "") or payload.get("idea", {}).get("revenue_model", "")
+        stage = payload.get("stage", "") or payload.get("idea", {}).get("stage", "")
 
         prompt = f"""
-        Identify the top 10 trending business opportunities related to: {goal}.
-        Return ONLY JSON:
+You are a startup trend analyst.
 
-        [
-          {{
-            "trend": "AI automation",
-            "description": "Businesses are adopting AI tools to automate workflows."
-          }}
-        ]
-        """
+Analyze the following startup idea against current market and technology trends.
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+Return ONLY valid JSON. No explanations, no markdown, no text outside the JSON.
+
+Use this exact structure:
+
+{{
+  "trend_score": 0,
+  "trend_fit": "short text",
+  "trend_risks": ["bullet 1", "bullet 2"],
+  "trend_opportunities": ["bullet 1", "bullet 2", "bullet 3"],
+  "summary": "1-2 sentence summary"
+}}
+
+Idea: {idea}
+Problem: {problem}
+Customer: {customer}
+Competitors: {competitors}
+Revenue Model: {revenue_model}
+Stage: {stage}
+"""
+
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.5
+            temperature=0.4
         )
 
-        raw = response.choices[0].message.content
-        return {"trends": self._safe_parse(raw)}
+        content = response.choices[0].message.content.strip()
 
-    def _safe_parse(self, text):
-        try:
-            return json.loads(text)
-        except:
-            start = text.find("[")
-            end = text.rfind("]") + 1
-            if start != -1 and end != -1:
-                try:
-                    return json.loads(text[start:end])
-                except:
-                    pass
-        return []
+        if self.debug:
+            print("TrendScanner RAW:", content)
+
+        return self._parse_json(content)

@@ -1,303 +1,554 @@
+# ui.py
 import streamlit as st
 from orchestrator import Orchestrator
-from auth import signup, login
-import pandas as pd
-import altair as alt
-from groq import Groq
-import os
-import json
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-
-st.set_page_config(page_title="Ouroboros Venture Advisor", layout="wide")
-
-# ---------------- THEME-AWARE COLORS ----------------
-theme = st.get_option("theme.base")
-
-if theme == "dark":
-    CARD_BG = "#1e1e1e"
-    CARD_BORDER = "#333333"
-    CARD_TEXT = "#f5f5f5"
-    BANNER_BG = "#2a2a2a"
-else:
-    CARD_BG = "#ffffff"
-    CARD_BORDER = "#e0e0e0"
-    CARD_TEXT = "#000000"
-    BANNER_BG = "#f0f2f6"
-
-# ---------------- AUTHENTICATION ----------------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if not st.session_state.logged_in:
-
-    st.title("🔐 Welcome to Ouroboros Venture Advisor")
-
-    tab1, tab2 = st.tabs(["Login", "Signup"])
-
-    with tab1:
-        st.subheader("Login")
-        username = st.text_input("Username", key="login_user")
-        password = st.text_input("Password", type="password", key="login_pass")
-        if st.button("Login"):
-            ok, msg = login(username, password)
-            if ok:
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.success("Login successful! Redirecting...")
-                st.rerun()
-            else:
-                st.error(msg)
-
-    with tab2:
-        st.subheader("Signup")
-        new_user = st.text_input("Choose a username", key="signup_user")
-        new_pass = st.text_input("Choose a password", type="password", key="signup_pass")
-        if st.button("Create Account"):
-            ok, msg = signup(new_user, new_pass)
-            if ok:
-                st.success(msg)
-            else:
-                st.error(msg)
-
-    st.stop()
-
-# ---------------- SIDEBAR ----------------
-st.sidebar.title(f"Welcome, {st.session_state.username} 👋")
-
-st.sidebar.markdown("---")
-if st.sidebar.button("Logout"):
-    st.session_state.logged_in = False
-    st.experimental_rerun()
-
-st.sidebar.markdown("---")
-
-investment = st.sidebar.number_input(
-    "Investment Amount ($)", min_value=50, max_value=100000, value=300
+# ---------------------------------------------------------
+# APP CONFIG
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title="Ouroboros Venture Advisor",
+    page_icon="🌀",
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-goal = st.sidebar.text_input(
-    "Optional Goal (e.g., AI tools, student tools)", value="general"
-)
+# ---------------------------------------------------------
+# GLOBAL STYLES (FUTURISTIC NEON CYBER-SaaS)
+# ---------------------------------------------------------
+NEON_CSS = """
+<style>
+body {
+    background: radial-gradient(circle at top, #050816 0, #02010a 40%, #000000 100%) !important;
+    color: #f5f5f5 !important;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #050816 0%, #050816 40%, #020617 100%) !important;
+    border-right: 1px solid rgba(148, 163, 184, 0.25);
+}
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #e5e7eb;
+}
+.sidebar-subtitle {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+.neon-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #22d3ee, #a855f7, #f97316);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.glass-panel {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.65));
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.2rem;
+}
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 0.4rem;
+}
+.section-heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #e5e7eb;
+}
+.score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.9));
+    border: 1px solid rgba(56, 189, 248, 0.6);
+    color: #e0f2fe;
+}
+.neon-bar-container {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.9);
+    overflow: hidden;
+    border: 1px solid rgba(31, 41, 55, 0.9);
+}
+.neon-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22d3ee, #a855f7, #f97316);
+}
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    color: #e5e7eb;
+    margin-right: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+.timeline-week {
+    border-left: 2px solid rgba(56, 189, 248, 0.7);
+    padding-left: 0.9rem;
+    margin-bottom: 0.8rem;
+}
+.timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #22d3ee;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
+    margin-right: 0.4rem;
+}
+.idea-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.8rem;
+}
+.footer {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: right;
+    margin-top: 1.5rem;
+}
+</style>
+"""
+st.markdown(NEON_CSS, unsafe_allow_html=True)
 
-industry = st.sidebar.selectbox(
-    "Industry Preference", ["Any", "AI", "Education", "Finance", "Healthcare", "Retail"]
-)
-constraints = {"industry": industry}
+# ---------------------------------------------------------
+# ORCHESTRATOR INSTANCE
+# ---------------------------------------------------------
+@st.cache_resource
+def get_orchestrator():
+    return Orchestrator(debug=False)
 
-time_horizon = st.sidebar.slider(
-    "Time Horizon (days)", min_value=7, max_value=60, value=30
-)
 
-run_button = st.sidebar.button("🚀 Generate Ideas")
+orch = get_orchestrator()
 
-# ---------------- MAIN TITLE ----------------
-st.title("🚀 Ouroboros Venture Advisor (Groq-Powered)")
-st.markdown(
-    "Turn your budget into **actionable, AI‑generated venture ideas**, "
-    "with scoring, comparison, and execution plans."
-)
+# ---------------------------------------------------------
+# SIDEBAR NAVIGATION
+# ---------------------------------------------------------
+with st.sidebar:
+    st.markdown('<div class="sidebar-title">OUROBOROS</div>', unsafe_allow_html=True)
+    st.markdown('<div class="neon-logo">Venture Advisor</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-subtitle">AI co-pilot for startup decisions</div>', unsafe_allow_html=True)
+    st.markdown("---")
 
-result = None
+    page = st.radio(
+        "Navigation",
+        ["Validate Idea", "Generate Ideas", "Compare Ideas"],
+        index=0,
+    )
 
-# ---------------- RUN ORCHESTRATOR ----------------
-if run_button:
-    status = st.empty()
-    status.markdown("🧠 Scanning trends...")
+    st.markdown("---")
+    st.caption("Powered by Groq · llama-3.3-70b-versatile")
 
-    with st.spinner("Thinking through trends, ideas, and plans…"):
-        orch = Orchestrator()
-        result = orch.run_session(
-            budget=investment,
-            goal=goal,
-            constraints=constraints,
-            time_horizon=time_horizon
-        )
 
-    status.markdown("✅ Ideas generated and evaluated.")
-    st.success("Ideas generated successfully!")
-
-# ---------------- DISPLAY RESULTS ----------------
-if result:
-
-    # ---------- SUMMARY BANNER ----------
-    top = result["top_recommendations"][0]["idea"]
-    score = result["top_recommendations"][0]["combined_score"]
+# ---------------------------------------------------------
+# HELPER: NEON SCORE BAR
+# ---------------------------------------------------------
+def neon_score_bar(label: str, value: int, invert: bool = False):
+    value = max(0, min(100, int(value)))
+    display_value = 100 - value if invert else value
 
     st.markdown(
         f"""
-        <div style="
-            padding: 20px;
-            border-radius: 10px;
-            background-color: {BANNER_BG};
-            margin-bottom: 20px;
-            border: 1px solid {CARD_BORDER};
-            color: {CARD_TEXT};
-        ">
-            <h2 style="margin: 0; color: {CARD_TEXT};">🏆 Top Idea: {top['title']}</h2>
-            <p>{top['description']}</p>
-            <p><b>Score:</b> {score:.2f}</p>
-            <p><b>Budget Required:</b> ${top['budget_required']}</p>
+        <div style="margin-bottom:0.35rem; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.85rem; color:#e5e7eb;">{label}</span>
+            <span style="font-size:0.85rem; color:#e5e7eb; opacity:0.8;">{display_value}</span>
+        </div>
+        <div class="neon-bar-container">
+            <div class="neon-bar-fill" style="width:{display_value}%;"></div>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
-    # ---------- MARKET TRENDS ----------
-    with st.expander("📈 Market Trends", expanded=True):
-        for t in result["trends"]:
-            st.markdown(f"- **{t['trend']}** — {t['description']}")
 
-    # ---------- GENERATED IDEAS ----------
-    with st.expander("💡 Generated Ideas", expanded=True):
-        for idea in result["ideas"]:
+# ---------------------------------------------------------
+# PAGE 1: VALIDATE IDEA
+# ---------------------------------------------------------
+def page_validate_idea():
+    st.markdown('<div class="section-title">Mode · Validation</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-heading">Evaluate a Startup Idea</div>', unsafe_allow_html=True)
+    st.write(
+        "Describe your idea and Ouroboros Venture Advisor will score it across trends, "
+        "financials, impact, and risk—then generate a 30‑day execution roadmap."
+    )
+
+    with st.container():
+        col_form, col_result = st.columns([1.1, 1.4])
+
+        # LEFT: FORM
+        with col_form:
+            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+            st.markdown("#### Idea Details")
+
+            idea_description = st.text_area(
+                "Idea Description",
+                placeholder="AI‑powered co‑pilot for solo founders to validate and prioritize startup ideas...",
+                height=120,
+            )
+            target_customer = st.text_input(
+                "Target Customer",
+                placeholder="Solo founders, indie hackers, early‑stage builders...",
+            )
+            problem = st.text_area(
+                "Problem",
+                placeholder="Founders struggle to objectively evaluate ideas across market demand, feasibility, and risk...",
+                height=100,
+            )
+            competitors = st.text_area(
+                "Competitors",
+                placeholder="Notion, Airtable templates, generic AI chatbots, startup idea lists...",
+                height=80,
+            )
+            revenue_model = st.text_input(
+                "Revenue Model",
+                placeholder="Subscription, usage‑based, one‑time fee, consulting upsell...",
+            )
+            stage = st.selectbox(
+                "Current Stage",
+                ["Idea only", "Prototype", "MVP live", "Paying users", "Scaling"],
+                index=0,
+            )
+
+            validate_btn = st.button("⚡ Run Idea Evaluation", use_container_width=True)
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        # RIGHT: RESULTS
+        with col_result:
+            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+            st.markdown("#### Evaluation Summary")
+
+            if validate_btn:
+                if not idea_description.strip():
+                    st.warning("Please provide at least an idea description to run evaluation.")
+                else:
+                    with st.spinner("Analyzing your idea across trends, financials, impact, and risk..."):
+                        result = orch.validate_idea(
+                            idea_description=idea_description,
+                            target_customer=target_customer,
+                            problem=problem,
+                            competitors=competitors,
+                            revenue_model=revenue_model,
+                            stage=stage,
+                        )
+
+                    scores = result.get("scores", {})
+                    summary = result.get("summary", "")
+                    strengths = result.get("strengths", [])
+                    weaknesses = result.get("weaknesses", [])
+
+                    overall = scores.get("overall_viability", 50)
+                    recommendation = scores.get("recommendation", "PROCEED WITH CAUTION")
+
+                    st.markdown(
+                        f"""
+                        <div class="score-badge">
+                            <span>Overall Viability</span>
+                            <span style="font-size:0.9rem;">{overall}/100</span>
+                            <span style="opacity:0.7;">·</span>
+                            <span>{recommendation}</span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                    st.markdown(f"<p style='margin-top:0.6rem; color:#e5e7eb;'>{summary}</p>", unsafe_allow_html=True)
+
+                    st.markdown("##### Score Breakdown")
+                    neon_score_bar("Market Demand", scores.get("market_demand", 50))
+                    neon_score_bar("Feasibility", scores.get("feasibility", 50))
+                    neon_score_bar("Impact", scores.get("impact", 50))
+                    neon_score_bar("Risk (lower is better)", scores.get("risk", 50), invert=True)
+
+                    col_s, col_w = st.columns(2)
+                    with col_s:
+                        st.markdown("##### Strengths")
+                        if strengths:
+                            for s in strengths:
+                                st.markdown(f"- {s}")
+                        else:
+                            st.markdown("- No strengths identified.")
+                    with col_w:
+                        st.markdown("##### Weaknesses")
+                        if weaknesses:
+                            for w in weaknesses:
+                                st.markdown(f"- {w}")
+                        else:
+                            st.markdown("- No weaknesses identified.")
+            else:
+                st.info("Fill in the idea details on the left and click **Run Idea Evaluation**.")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    # EXECUTION PLAN
+    st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+    st.markdown("#### Suggested 30‑Day Execution Plan")
+
+    if "result" in locals() and result.get("next_steps"):
+        plan = result["next_steps"]
+        for step in plan:
+            week = step.get("week", "?")
+            tasks = step.get("tasks", [])
             st.markdown(
                 f"""
-                <div style="
-                    padding: 15px;
-                    border-radius: 8px;
-                    border: 1px solid {CARD_BORDER};
-                    margin-bottom: 15px;
-                    background-color: {CARD_BG};
-                    color: {CARD_TEXT};
-                ">
-                    <h3 style="margin-top: 0; color: {CARD_TEXT};">{idea['title']}</h3>
-                    <p>{idea['description']}</p>
-                    <p><b>Budget Required:</b> ${idea['budget_required']}</p>
+                <div class="timeline-week">
+                    <div style="display:flex; align-items:center; margin-bottom:0.2rem;">
+                        <div class="timeline-dot"></div>
+                        <span style="font-size:0.95rem; font-weight:600; color:#e5e7eb;">Week {week}</span>
+                    </div>
                 </div>
                 """,
-                unsafe_allow_html=True
+                unsafe_allow_html=True,
             )
+            for t in tasks:
+                st.markdown(f"- {t}")
+    else:
+        st.caption("Execution plan will appear here after you run an evaluation.")
 
-    # ---------- COMPARISON DASHBOARD ----------
-    with st.expander("📊 Idea Comparison Dashboard", expanded=True):
+    st.markdown("</div>", unsafe_allow_html=True)
 
-        ideas = [i["title"] for i in result["ideas"]]
 
-        financial_scores = result["financial_scores_by_title"]
-        impact_scores = result["impact_scores_by_title"]
-        ethics_scores = result["ethics_scores_by_title"]
+# ---------------------------------------------------------
+# PAGE 2: GENERATE IDEAS
+# ---------------------------------------------------------
+def page_generate_ideas():
+    st.markdown('<div class="section-title">Mode · Generation</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-heading">Generate Startup Ideas</div>', unsafe_allow_html=True)
+    st.write(
+        "Describe your budget, goals, and constraints. Ouroboros Venture Advisor will generate multiple startup ideas "
+        "and score them across financials, impact, and risk."
+    )
 
-        data = []
-        for title in ideas:
-            data.append({
-                "Idea": title,
-                "Financial Score": financial_scores.get(title, 0),
-                "Impact Score": impact_scores.get(title, 0),
-                "Ethics Score": ethics_scores.get(title, 0),
-            })
+    with st.container():
+        col_form, col_result = st.columns([1.1, 1.4])
 
-        df_scores = pd.DataFrame(data)
-        st.dataframe(df_scores, use_container_width=True)
+        # LEFT: FORM
+        with col_form:
+            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+            st.markdown("#### Generation Settings")
 
-        # ----- BAR CHART -----
-        st.markdown("#### Multi‑Metric Score Chart")
-        st.bar_chart(df_scores.set_index("Idea"))
-
-        # ----- RADAR CHART -----
-        long_df = df_scores.melt(id_vars="Idea", var_name="Metric", value_name="Score")
-        radar = (
-            alt.Chart(long_df)
-            .mark_line(point=True)
-            .encode(
-                theta="Metric:N",
-                radius="Score:Q",
-                color="Idea:N"
+            budget = st.number_input("Budget (USD)", min_value=0, value=1000, step=100)
+            goal = st.text_area(
+                "Goal",
+                placeholder="Build a SaaS or AI‑powered product that can reach $X MRR in Y months...",
+                height=100,
             )
-            .properties(height=400)
-        )
-        st.markdown("#### Radar View of Scores")
-        st.altair_chart(radar, use_container_width=True)
-
-        # ----- ROI PROJECTION -----
-        st.markdown("#### ROI Projection (Simulated)")
-        roi_rows = []
-        for _, row in df_scores.iterrows():
-            base = row["Financial Score"] / 100
-            for month in range(1, 13):
-                roi_rows.append({
-                    "Idea": row["Idea"],
-                    "Month": month,
-                    "Projected ROI": base * month
-                })
-        roi_df = pd.DataFrame(roi_rows)
-        roi_chart = (
-            alt.Chart(roi_df)
-            .mark_line()
-            .encode(
-                x="Month:Q",
-                y="Projected ROI:Q",
-                color="Idea:N"
+            constraints = st.text_area(
+                "Constraints",
+                placeholder="Solo founder, limited engineering time, no paid ads, prefer B2B, etc...",
+                height=80,
             )
-            .properties(height=300)
-        )
-        st.altair_chart(roi_chart, use_container_width=True)
+            time_horizon = st.number_input("Time Horizon (days)", min_value=7, max_value=365, value=90, step=7)
 
-        # ----- RISK VS REWARD -----
-        st.markdown("#### Risk vs Reward")
-        rr_df = pd.DataFrame({
-            "Idea": df_scores["Idea"],
-            "Reward": df_scores["Financial Score"],
-            "Risk": 100 - df_scores["Ethics Score"]
-        })
-        rr_chart = (
-            alt.Chart(rr_df)
-            .mark_circle(size=120)
-            .encode(
-                x="Risk:Q",
-                y="Reward:Q",
-                color="Idea:N",
-                tooltip=["Idea", "Risk", "Reward"]
-            )
-            .properties(height=300)
-        )
-        st.altair_chart(rr_chart, use_container_width=True)
+            generate_btn = st.button("🚀 Generate & Rank Ideas", use_container_width=True)
 
-    # ---------- TOP RECOMMENDATIONS ----------
-    with st.expander("🏆 Top Recommendations", expanded=True):
-        for rec in result["top_recommendations"]:
-            idea = rec["idea"]
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        # RIGHT: RESULTS
+        with col_result:
+            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+            st.markdown("#### Generated Ideas & Ranking")
+
+            if generate_btn:
+                if not goal.strip():
+                    st.warning("Please provide at least a goal to generate ideas.")
+                else:
+                    with st.spinner("Generating ideas, scoring them, and computing a ranking..."):
+                        session = orch.run_session(
+                            budget=budget,
+                            goal=goal,
+                            constraints=constraints,
+                            time_horizon=time_horizon,
+                        )
+
+                    ideas = session.get("ideas", [])
+                    financial_scores = session.get("financial_scores", {})
+                    impact_scores = session.get("impact_scores", {})
+                    ethics_scores = session.get("ethics_scores", {})
+                    top_recs = session.get("top_recommendations", [])
+
+                    if ideas:
+                        for idea in ideas:
+                            title = idea.get("title", "Untitled Idea")
+                            desc = idea.get("description", "")
+                            category = idea.get("category", "Uncategorized")
+                            why_now = idea.get("why_now", "")
+                            target_customer = idea.get("target_customer", "")
+                            problem = idea.get("problem", "")
+                            revenue_model = idea.get("revenue_model", "")
+
+                            f_score = financial_scores.get(title, 0)
+                            i_score = impact_scores.get(title, 0)
+                            r_score = ethics_scores.get(title, 0)
+
+                            st.markdown('<div class="idea-card">', unsafe_allow_html=True)
+                            st.markdown(f"**{title}**")
+                            st.caption(category)
+                            st.markdown(desc)
+
+                            st.markdown(
+                                f"""
+                                <div style="margin-top:0.3rem; margin-bottom:0.3rem;">
+                                    <span class="pill">Why now: {why_now}</span>
+                                    <span class="pill">Customer: {target_customer}</span>
+                                    <span class="pill">Revenue: {revenue_model}</span>
+                                </div>
+                                """,
+                                unsafe_allow_html=True,
+                            )
+
+                            neon_score_bar("Financial Potential", f_score)
+                            neon_score_bar("Impact", i_score)
+                            neon_score_bar("Risk (lower is better)", r_score, invert=True)
+
+                            st.markdown("</div>", unsafe_allow_html=True)
+
+                        if top_recs:
+                            st.markdown("##### Top Recommendation")
+                            top = top_recs[0]
+                            top_idea = top.get("idea", {})
+                            top_score = top.get("combined_score", 0)
+                            reason = top.get("reason", "")
+
+                            st.success(
+                                f"**{top_idea.get('title', 'Top Idea')}** · Combined Score: {top_score}\n\n{reason}"
+                            )
+                    else:
+                        st.info("No ideas generated. Try adjusting your goal or constraints.")
+            else:
+                st.info("Fill in the generation settings on the left and click **Generate & Rank Ideas**.")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    # EXECUTION PLAN FOR TOP IDEA
+    st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+    st.markdown("#### Suggested Execution Plan for Top Idea")
+
+    if "session" in locals() and session.get("execution_plan"):
+        plan = session["execution_plan"]
+        for step in plan:
+            week = step.get("week", "?")
+            tasks = step.get("tasks", [])
             st.markdown(
                 f"""
-                <div style="
-                    padding: 15px;
-                    border-radius: 8px;
-                    border: 1px solid {CARD_BORDER};
-                    margin-bottom: 15px;
-                    background-color: {CARD_BG};
-                    color: {CARD_TEXT};
-                ">
-                    <h3 style="margin-top: 0; color: {CARD_TEXT};">{idea['title']}</h3>
-                    <p>{idea['description']}</p>
-                    <p><b>Combined Score:</b> {rec['combined_score']:.2f}</p>
+                <div class="timeline-week">
+                    <div style="display:flex; align-items:center; margin-bottom:0.2rem;">
+                        <div class="timeline-dot"></div>
+                        <span style="font-size:0.95rem; font-weight:600; color:#e5e7eb;">Week {week}</span>
+                    </div>
                 </div>
                 """,
-                unsafe_allow_html=True
+                unsafe_allow_html=True,
             )
+            for t in tasks:
+                st.markdown(f"- {t}")
+    else:
+        st.caption("Execution plan for the top idea will appear here after you generate ideas.")
 
-    # ---------- EXECUTION PLAN ----------
-    with st.expander("🗂 Execution Plan for Top Idea", expanded=True):
-        for step in result["execution_plan"]:
-            st.markdown(
-                f"""
-                <div style="
-                    padding: 10px;
-                    border-radius: 6px;
-                    border: 1px solid {CARD_BORDER};
-                    margin-bottom: 8px;
-                    background-color: {CARD_BG};
-                    color: {CARD_TEXT};
-                ">
-                    <b>Day {step['day']}</b> — {step['task']}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-else:
-    st.info("Set your parameters in the sidebar and click **Generate Ideas** to begin.")
+
+# ---------------------------------------------------------
+# PAGE 3: COMPARE IDEAS
+# ---------------------------------------------------------
+def page_compare_ideas():
+    st.markdown('<div class="section-title">Mode · Comparison</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-heading">Compare Multiple Ideas</div>', unsafe_allow_html=True)
+    st.write(
+        "Use this page to quickly compare multiple ideas you’ve already evaluated. "
+        "Adjust the sliders to reflect their scores and see them side‑by‑side."
+    )
+
+    st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+    st.markdown("#### Manual Comparison Grid")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        idea_a = st.text_input("Idea A Title", value="Idea A")
+        a_market = st.slider("A · Market Demand", 0, 100, 70)
+        a_feas = st.slider("A · Feasibility", 0, 100, 60)
+        a_impact = st.slider("A · Impact", 0, 100, 75)
+        a_risk = st.slider("A · Risk (lower better)", 0, 100, 40)
+
+    with col2:
+        idea_b = st.text_input("Idea B Title", value="Idea B")
+        b_market = st.slider("B · Market Demand", 0, 100, 65)
+        b_feas = st.slider("B · Feasibility", 0, 100, 55)
+        b_impact = st.slider("B · Impact", 0, 100, 80)
+        b_risk = st.slider("B · Risk (lower better)", 0, 100, 35)
+
+    with col3:
+        idea_c = st.text_input("Idea C Title", value="Idea C")
+        c_market = st.slider("C · Market Demand", 0, 100, 60)
+        c_feas = st.slider("C · Feasibility", 0, 100, 65)
+        c_impact = st.slider("C · Impact", 0, 100, 70)
+        c_risk = st.slider("C · Risk (lower better)", 0, 100, 45)
+
+    st.markdown("---")
+    st.markdown("#### Visual Comparison")
+
+    comp_cols = st.columns(3)
+    ideas = [
+        (idea_a, a_market, a_feas, a_impact, a_risk),
+        (idea_b, b_market, b_feas, b_impact, b_risk),
+        (idea_c, c_market, c_feas, c_impact, c_risk),
+    ]
+
+    for col, (title, m, f, i, r) in zip(comp_cols, ideas):
+        with col:
+            st.markdown('<div class="idea-card">', unsafe_allow_html=True)
+            st.markdown(f"**{title}**")
+            neon_score_bar("Market Demand", m)
+            neon_score_bar("Feasibility", f)
+            neon_score_bar("Impact", i)
+            neon_score_bar("Risk (lower is better)", r, invert=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------
+# ROUTER
+# ---------------------------------------------------------
+if page == "Validate Idea":
+    page_validate_idea()
+elif page == "Generate Ideas":
+    page_generate_ideas()
+elif page == "Compare Ideas":
+    page_compare_ideas()
+
+# ---------------------------------------------------------
+# FOOTER
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="footer">Ouroboros Venture Advisor · Built for founders who take their ideas seriously.</div>',
+    unsafe_allow_html=True,
+)

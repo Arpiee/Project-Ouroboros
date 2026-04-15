@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project-Ouroboros
 
 # 🐍 Ouroboros Venture Advisor  
@@ -40,3 +41,26 @@ pip install -r requirements.txt
 Create a .env file: (OPENAI_API_KEY=your_key_here)
 
 ▶️ Running the App (streamlit run ui.py)
+=======
+# Project Ouroboros – Multi-Agent AI System
+
+## Overview
+Ouroboros is an autonomous multi-agent system designed to generate, evaluate, and select micro-investment ideas using a small fund.
+
+## Phase 1 Goal
+Build the core architecture:
+- Multi-agent pipeline
+- Orchestrator
+- Simulation loop
+- Logging + memory
+
+## Agent Architecture
+- A1 – Trend Scanner
+- A2 – Idea Generator
+- B1 – Financial Evaluator
+- B2 – Ethics Evaluator
+- B3 – Impact Evaluator
+- C1 – Idea Selector
+
+## Folder Structure
+>>>>>>> a870bb9 (second commit)
